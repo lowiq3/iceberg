@@ -1,4 +1,4 @@
-# Iceberg Table Registration Tool (Pure API)
+# Iceberg Table Registration Tool (Curl)
 
 This directory contains a lightweight script to automate the registration of existing Iceberg tables into the BigLake Iceberg REST Catalog using direct REST API calls.
 
