@@ -18,6 +18,13 @@ This directory contains a lightweight script to automate the registration of exi
 
 ## Usage
 
+```bash
+$ curl -O https://raw.githubusercontent.com/lowiq3/iceberg/main/scripts/bigquery-iceberg.sh
+$ chmod +x bigquery-iceberg.sh
+$ gcloud auth login
+$ gcloud config set project [YOUR GCP PROJECT]
+```
+
 Provide the full GCS path to an Iceberg `metadata.json` file:
 
 ```bash
