@@ -5,6 +5,7 @@
 
 PROJECT_ID=${GCP_PROJECT:-"848136119615"}
 LOCATION=${LOCATION:-"us-central1"}
+NAMESPACE=${NAMESPACE:-"default-ns"}
 METADATA_PATH=$1
 
 if [ -z "$METADATA_PATH" ]; then
@@ -16,8 +17,8 @@ fi
 # Logic: gs://bucket/namespace/table/metadata/v.json
 BUCKET=$(echo $METADATA_PATH | cut -d'/' -f3)
 CATALOG_NAME=$BUCKET
-NAMESPACE=$(echo $METADATA_PATH | cut -d'/' -f4)
-TABLE_NAME=$(echo $METADATA_PATH | cut -d'/' -f5)
+TABLE_NAME=$(echo "$METADATA_PATH" | sed -E 's|.*/([^/]+)/metadata/.*|\1|')
+NAMESPACE_LOCATION=$(echo "$METADATA_PATH" | sed -E "s#/$TABLE_NAME/metadata/.*##")
 
 # API Base URLs
 BIGLAKE_API="https://biglake.googleapis.com/v1/projects/$PROJECT_ID/locations/$LOCATION/catalogs"
@@ -30,6 +31,7 @@ echo "Location:  $LOCATION"
 echo "Catalog:   $CATALOG_NAME"
 echo "Namespace: $NAMESPACE"
 echo "Table:     $TABLE_NAME"
+echo "Namespace Location: $NAMESPACE_LOCATION"
 echo "--------------------------"
 
 TOKEN=$(gcloud auth print-access-token)
@@ -65,8 +67,7 @@ if [ "$NS_HTTP_CODE" == "200" ]; then
 else
     echo "Response: HTTP $NS_HTTP_CODE (Namespace not found). Creating..."
     CREATE_NS_URL="$ICEBERG_REST_API/namespaces"
-    # Iceberg spec: {"namespace": ["name"]}
-    CREATE_NS_DATA="{\"namespace\": [\"$NAMESPACE\"]}"
+    CREATE_NS_DATA='{"namespace":["'$NAMESPACE'"],"properties":{"location":"'$NAMESPACE_LOCATION'"}}'
     curl -s -X POST \
         -H "Authorization: Bearer $TOKEN" \
         -H "x-goog-user-project: $PROJECT_ID" \
@@ -74,6 +75,13 @@ else
         -d "$CREATE_NS_DATA" \
         "$CREATE_NS_URL" | grep -v "^$"
 fi
+
+GET_NAMESPACE_RESPONSE=$(curl -s -X GET \
+    -H "Authorization: Bearer $TOKEN" \
+    -H "x-goog-user-project: $PROJECT_ID" \
+    "$CHECK_NS_URL")
+
+echo "Response: $GET_NAMESPACE_RESPONSE"
 
 # 4. Register Table via direct curl
 echo -e "\nStep 3: Registering Table '$TABLE_NAME'..."
