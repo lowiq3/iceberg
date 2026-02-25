@@ -4,7 +4,7 @@ This directory contains a lightweight script to automate the registration of exi
 
 ## Contents
 
-- `register_iceberg_api.sh`: A bash script that uses `curl` to interact with the BigLake REST API. It handles:
+- `bigquery-iceberg.sh`: A bash script that uses `curl` to interact with the BigLake REST API. It handles:
     - Automatic derivation of Catalog, Namespace, and Table names from a GCS metadata path.
     - Creation of the Catalog (GCS-bucket type) if it does not exist via BigLake regional REST API.
     - Verification and creation of the Namespace via Iceberg REST Catalog endpoint.
