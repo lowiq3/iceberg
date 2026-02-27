@@ -38,8 +38,9 @@ The `run_mode` above specifies if its a `warmup` or `test` execution that has ha
 
 ## Tool Usage
 
-* ```benchmark-queries -h
-usage: benchmark-queries [-h] --project_id PROJECT_ID [--default_dataset DEFAULT_DATASET] --query_dir QUERY_DIR [--warmup_iters WARMUP_ITERS] [--test_iters TEST_ITERS]```
+```benchmark-queries -h
+usage: benchmark-queries [-h] --project_id PROJECT_ID [--default_dataset DEFAULT_DATASET] --query_dir QUERY_DIR [--warmup_iters WARMUP_ITERS] [--test_iters TEST_ITERS]
+```
 
 The resultant reports will contain the following information:
 
