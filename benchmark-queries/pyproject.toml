@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "benchmark-queries"
+version = "0.0.1"
+description = "BQ Exec"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "google-cloud-bigquery",
+    "google-cloud-bigquery-storage",
+    "gspread",
+]
+
+[project.scripts]
+benchmark-queries = "benchmark_queries:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
